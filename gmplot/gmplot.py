@@ -503,7 +503,7 @@ class GoogleMapPlotter(object):
         f.write('var bounds = [[%f, %f], [%f, %f]];\n' %
                 (self.bounding_box[0], self.bounding_box[1],
                  self.bounding_box[2], self.bounding_box[3]))
-        f.write('llmap.fitBounds(bounds);\n')
+        f.write('llMap.fitBounds(bounds);\n')
 
 if __name__ == "__main__":
 
