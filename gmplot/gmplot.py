@@ -263,7 +263,7 @@ class GoogleMapPlotter(object):
         f.write('\tfunction initialize() {\n')
         self.write_map(f)
         # self.write_grids(f)
-        # self.write_points(f)
+        self.write_points(f)
         self.write_paths(f)
         # self.write_circles(f)
         # self.write_symbols(f)
@@ -367,21 +367,19 @@ class GoogleMapPlotter(object):
         f.write('\t\tbaseLayer.addTo(llMap);\n')
 
     def write_point(self, f, lat, lon, color, title, id):
-        f.write('\t\tvar latlng = new google.maps.LatLng(%f, %f);\n' %
+        f.write('\t\tvar latlng = [%f, %f];\n' %
                 (lat, lon))
-        f.write('\t\tvar img = new google.maps.MarkerImage(\'%s\');\n' %
+        f.write('\t\tvar img = new LeafIcon({iconUrl: \'%s\'});\n' %
                 (self.coloricon % color))
-        f.write('\t\tvar marker'+str(id)+' = new google.maps.Marker({\n')
+        f.write('\t\tvar marker'+str(id)+' = L.marker(latlng, {\n')
         f.write('\t\ttitle: "%s",\n' % title)
         f.write('\t\ticon: img,\n')
-        f.write('\t\tposition: latlng\n')
         f.write('\t\t});\n')
 
         if title != "no implementation":
-            f.write('\t\tvar infowindow'+str(id)+' = new google.maps.InfoWindow({ content: "<span>'+title+'</span>" });\n')
-            f.write('\t\tmarker'+str(id)+'.addListener("click", function() { infowindow'+str(id)+'.open(map, marker'+str(id)+'); });\n')
+            f.write('\t\tmarker'+str(id)+'.bindPopup("'+title+'");\n')
 
-        f.write('\t\tmarker'+str(id)+'.setMap(map);\n')
+        f.write('\t\tmarker'+str(id)+'.addTo(llMap);\n')
         f.write('\n')
 
     def write_symbol(self, f, symbol, settings):
@@ -410,8 +408,8 @@ class GoogleMapPlotter(object):
                               fillColor=fillColor, fillOpacity=fillOpacity))
 
     def write_polyline(self, f, path, settings):
-        clickable = False
-        geodesic = True
+        # clickable = False
+        # geodesic = True
         strokeColor = settings.get('color') or settings.get('edge_color')
         strokeOpacity = settings.get('edge_alpha')
         strokeWeight = settings.get('edge_width')
@@ -426,10 +424,9 @@ class GoogleMapPlotter(object):
         f.write('var Path = L.polyline( PolylineCoordinates, {\n')
         # f.write('clickable: %s,\n' % (str(clickable).lower()))
         # f.write('geodesic: %s,\n' % (str(geodesic).lower()))
-        # f.write('path: PolylineCoordinates,\n')
         f.write('color: "%s",\n' % (strokeColor))
-        # f.write('strokeOpacity: %f,\n' % (strokeOpacity))
-        # f.write('strokeWeight: %d\n' % (strokeWeight))
+        f.write('opacity: %f,\n' % (strokeOpacity))
+        f.write('weight: %d\n' % (strokeWeight))
         f.write('}).addTo(llMap);\n')
         f.write('\n\n')
 
