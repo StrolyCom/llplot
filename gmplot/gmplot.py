@@ -375,7 +375,7 @@ class GoogleMapPlotter(object):
     def write_point(self, f, lat, lon, color, title, id):
         f.write('\t\tvar latlng = [%f, %f];\n' %
                 (lat, lon))
-        f.write('\t\tvar img = new L.MarkerIcon({iconUrl: \'%s\'});\n' %
+        f.write('\t\tvar img = new MarkerIcon({iconUrl: \'%s\'});\n' %
                 (self.coloricon % color))
         f.write('\t\tvar marker'+str(id)+' = L.marker(latlng, {\n')
         f.write('\t\ttitle: "%s",\n' % title)
