@@ -26,8 +26,7 @@ def safe_iter(var):
         return [var]
 
 
-DEFAULT_ATTRIBUTION = '<a href="http://creativecommons.org/licenses/by-sa/2.0/">' \
-      'CC-BY-SA</a> Imagery &copy; <a href="http://mapbox.com">Mapbox</a>'
+DEFAULT_ATTRIBUTION = 'CC-BY-SA. Imagery Mapbox'
 
 class GoogleMapPlotter(object):
 
@@ -356,8 +355,10 @@ class GoogleMapPlotter(object):
 
     # TODO: Add support for mapTypeId: google.maps.MapTypeId.SATELLITE
     def write_map(self,  f):
-        f.write('\t\tvar baseLayer = L.tileLayer("%s",\n\t\t\t{"%s", mapid: "streets"});\n' %
-                (self.tile_url, self.attribution.replace('"', "'")))
+        f.write('\t\tvar baseLayer = L.tileLayer("%s",\n' %
+                (self.tile_url))
+        f.write('\t\t\t{"%s",\n\t\t\tmapid: "streets"});\n' %
+                (self.attribution.replace('"', "'")))
         f.write('\t\tllMap = L.map("mapid", {\n')
         f.write('\t\t\tzoomSnap: 0,\n')
         f.write('\t\t\tmaxZoom: 18\n')
