@@ -1,17 +1,22 @@
-gmplot
-======
+gmplot -> llplot
+================
 
-Plotting data on Google Maps, the easy way. A matplotlib-like
+Plotting data on a Leaflet map (instead of GoogleMap), the easy way. A matplotlib-like
 interface to generate the HTML and javascript to render all the
-data you'd like on top of Google Maps. Several plotting methods
+data you'd like on top of Leaflet. Several plotting methods
 make creating exploratory map views effortless. Here's a crash course:
 
 ::
 
     from gmplot import gmplot
 
+    mapbox_token = "<your token>"
     # Place map
-    gmap = gmplot.GoogleMapPlotter(37.766956, -122.438481, 13)
+    gmap = gmplot.LeafletPlotter(
+        "https://{s}.tiles.mapbox.com/v4/mapbox.{mapid}/{z}/{x}/{y}@2x.png?"
+        "access_token=" + mapbox_token,
+        37.766956, -122.438481, 13
+    )
 
     # Polygon
     golden_gate_park_lats, golden_gate_park_lons = zip(*[
@@ -29,17 +34,6 @@ make creating exploratory map views effortless. Here's a crash course:
         ])
     gmap.plot(golden_gate_park_lats, golden_gate_park_lons, 'cornflowerblue', edge_width=10)
 
-    # Scatter points
-    top_attraction_lats, top_attraction_lons = zip(*[
-        (37.769901, -122.498331),
-        (37.768645, -122.475328),
-        (37.771478, -122.468677),
-        (37.769867, -122.466102),
-        (37.767187, -122.467496),
-        (37.770104, -122.470436)
-        ])
-    gmap.scatter(top_attraction_lats, top_attraction_lons, '#3B0B39', size=40, marker=False)
-
     # Marker
     hidden_gem_lat, hidden_gem_lon = 37.770776, -122.461689
     gmap.marker(hidden_gem_lat, hidden_gem_lon, 'cornflowerblue')
@@ -47,10 +41,47 @@ make creating exploratory map views effortless. Here's a crash course:
     # Draw
     gmap.draw("my_map.html")
 
-.. image:: https://imgur.com/C6dnec8.png
+.. image:: https://i.imgur.com/12KXJS3.png
+
+About this fork
+---------------
+
+This is a fork of `gmplot <https://github.com/vgm64/gmplot/>`_ to show a map using `Leaflet <https://leafletjs.com/>`_
+instead of Google Maps (hence the name llplot). The main difference at creation is that it needs
+the base URL of the tiles you are going to display on leaflet.
+
+NOTE: Not all the write functions have been migrated from Google Maps to Leaflet. Please check the open issues list if you want to contribute.
+
+
+.. code-block:: python:
+
+    mapbox_token = "<your token>"
+    # Create map
+    map = gmplot.LeafletPlotter(
+        "https://{s}.tiles.mapbox.com/v4/mapbox.{mapid}/{z}/{x}/{y}@2x.png?"
+        "access_token=" + mapbox_token,
+        37.766956, -122.438481, 13
+    )
+
+    # Added three new optional arguments for draw:
+    # image_path: the path of an image to show before the map
+    # header and footer: html strings to draw before and after the map
+    map.draw("map.html",
+             img_path="./images/image.png",
+             header="This is the header",
+             footer="<PRE>And the footer</pre>")
+
+    # Call to fit_bounds
+    # https://developers.google.com/maps/documentation/javascript/reference/map#Map.fitBounds
+    map.fit_bounds(north, east, south, west)
+
+    # also, by default if a marker has title it is shown as a pop-up
+
 
 Geocoding
 ---------
+
+NOTE: NOT MIGRATE YET
 
 ``gmplot`` contains a simple wrapper around Google's geocoding service enabling
 map initilization to the location of your choice. Rather than providing latitude,
@@ -64,22 +95,19 @@ a location:
 Plot types
 ----------
 
-* Polygons with fills - ``plot``
-* Drop pins. - ``marker``
-* Scatter points. - ``scatter``
-* Grid lines. - ``grid``
-* Heatmaps. - ``heatmap``
+* Polygons with fills - ``plot`` # DONE
+* Drop pins. - ``marker`` # DONE
+* Scatter points. - ``scatter`` # TO DO
+* Grid lines. - ``grid`` # TO DO
+* Heatmaps. - ``heatmap`` # TO DO
 
-.. image:: http://i.imgur.com/dTNkbZ7.png
+.. image:: https://i.imgur.com/ETxECMW.png
 
 Misc.
 -----
 
-Code hosted on `GitHub <https://github.com/vgm64/gmplot>`_
-
-Install easily with ``pip install gmplot`` from PyPI.
+Install easily with ``pip install git+https://github.com/StrolyCom/gmplot.git#egg=gmplot`` directly from this repo.
 
 Inspired by Yifei Jiang's (jiangyifei@gmail.com) pygmaps_ module.
 
 .. _pygmaps: http://code.google.com/p/pygmaps/
-
