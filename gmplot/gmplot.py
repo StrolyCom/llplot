@@ -360,7 +360,7 @@ class GoogleMapPlotter(object):
                 '\t\t\t\ticonSize:     [21, 34],\n'
                 '\t\t\t\ticonAnchor:   [22, 34],\n'
                 '\t\t\t\tpopupAnchor:  [-3, -30]\n'
-                '\t\t\t});\n')
+                '\t\t\t}});\n')
         f.write('\t\tattribution = "%s";\n' % (self.attribution.replace('"', "'")))
         f.write('\t\tvar baseLayer = L.tileLayer("%s", {\n' %
                 (self.tile_url))
