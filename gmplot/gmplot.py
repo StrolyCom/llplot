@@ -28,7 +28,7 @@ def safe_iter(var):
 
 DEFAULT_ATTRIBUTION = 'CC-BY-SA. Imagery Mapbox'
 
-class GoogleMapPlotter(object):
+class LeafletPlotter(object):
 
     def __init__(self, tile_url, center_lat, center_lng, zoom, apikey='',
                  attribution=DEFAULT_ATTRIBUTION):
@@ -508,7 +508,7 @@ class GoogleMapPlotter(object):
 
 if __name__ == "__main__":
 
-    mymap = GoogleMapPlotter(37.428, -122.145, 16)
+    mymap = LeafletPlotter(37.428, -122.145, 16)
     # mymap = GoogleMapPlotter.from_geocode("Stanford University")
 
     mymap.grid(37.42, 37.43, 0.001, -122.15, -122.14, 0.001)
