@@ -270,7 +270,7 @@ class GoogleMapPlotter(object):
         # self.write_shapes(f)
         # self.write_heatmap(f)
         # self.write_ground_overlay(f)
-        # self.write_fitbounds(f)
+        self.write_fitbounds(f)
         f.write('\t}\n')
         f.write('</script>\n')
         f.write('</head>\n')
@@ -500,12 +500,10 @@ class GoogleMapPlotter(object):
         swlat = self.bounding_box[2]
         swlng = self.bounding_box[3]
 
-        f.write('var bounds = new google.maps.LatLngBounds();\n')
-        f.write('var ne = new google.maps.LatLng(%f, %f);\n' % (nelat, nelng))
-        f.write('var sw = new google.maps.LatLng(%f, %f);\n' % (swlat, swlng))
-        f.write('bounds.extend(ne);\n')
-        f.write('bounds.extend(sw);\n')
-        f.write('map.fitBounds(bounds);\n')
+        f.write('var bounds = [[%f, %f], [%f, %f]];\n' %
+                (self.bounding_box[0], self.bounding_box[1],
+                 self.bounding_box[2], self.bounding_box[3]))
+        f.write('llmap.fitBounds(bounds);\n')
 
 if __name__ == "__main__":
 
