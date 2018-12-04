@@ -356,8 +356,8 @@ class GoogleMapPlotter(object):
 
     # TODO: Add support for mapTypeId: google.maps.MapTypeId.SATELLITE
     def write_map(self,  f):
-        f.write('\t\tvar baseLayer = L.tileLayer(%s, {%s, mapid: "streets"});' %
-                (self.tile_url, self.attribution))
+        f.write('\t\tvar baseLayer = L.tileLayer("%s", {"%s", mapid: "streets"});' %
+                (self.tile_url, self.attribution.replace('"', "'")))
         f.write('\t\tllMap = L.map("mapid", {\n')
         f.write('\t\t\tzoomSnap: 0,\n')
         f.write('\t\t\tmaxZoom: 18\n')
