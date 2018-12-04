@@ -26,12 +26,18 @@ def safe_iter(var):
         return [var]
 
 
+DEFAULT_ATTRIBUTION = '<a href="http://creativecommons.org/licenses/by-sa/2.0/">' \
+      'CC-BY-SA</a> Imagery &copy; <a href="http://mapbox.com">Mapbox</a>'
+
 class GoogleMapPlotter(object):
 
-    def __init__(self, center_lat, center_lng, zoom, apikey=''):
+    def __init__(self, tile_url, center_lat, center_lng, zoom, apikey='',
+                 attribution=DEFAULT_ATTRIBUTION):
+        self.tile_url = tile_url
         self.center = (float(center_lat), float(center_lng))
         self.zoom = int(zoom)
         self.apikey = str(apikey)
+        self.attribution = attribution
         self.grids = None
         self.paths = []
         self.shapes = []
@@ -238,26 +244,34 @@ class GoogleMapPlotter(object):
         f.write('<html>\n')
         f.write('<head>\n')
         f.write(
-            '<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />\n')
+            '<link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.4/dist/leaflet.css" '
+            'integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA==" '
+            'crossorigin=""/>\n')
+        f.write(
+            '<script src="https://unpkg.com/leaflet@1.3.4/dist/leaflet.js"'
+            'integrity="sha512-nMMmRyTVoLYqjP9hrbed9S+FzjZHW5gY1TWCHA5ckwXZBadntCNs8kEqAWdrb9O7rxbCaA4lKTIWjDXZxflOcA=="'
+            'crossorigin=""></script>'
+        )
         f.write(
             '<meta http-equiv="content-type" content="text/html; charset=UTF-8"/>\n')
-        f.write('<title>Google Maps - gmplot </title>\n')
-        if self.apikey:
-            f.write('<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=visualization&sensor=true_or_false&key=%s"></script>\n' % self.apikey )
-        else:
-            f.write('<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=visualization&sensor=true_or_false"></script>\n' )
+        f.write('<title>Leaflet - llplot </title>\n')
+        # if self.apikey:
+        #     f.write('<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=visualization&sensor=true_or_false&key=%s"></script>\n' % self.apikey )
+        # else:
+        #     f.write('<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=visualization&sensor=true_or_false"></script>\n' )
         f.write('<script type="text/javascript">\n')
+        f.write('\tvar llMap;\n')
         f.write('\tfunction initialize() {\n')
         self.write_map(f)
-        self.write_grids(f)
-        self.write_points(f)
-        self.write_paths(f)
-        self.write_circles(f)
-        self.write_symbols(f)
-        self.write_shapes(f)
-        self.write_heatmap(f)
-        self.write_ground_overlay(f)
-        self.write_fitbounds(f)
+        # self.write_grids(f)
+        # self.write_points(f)
+        # self.write_paths(f)
+        # self.write_circles(f)
+        # self.write_symbols(f)
+        # self.write_shapes(f)
+        # self.write_heatmap(f)
+        # self.write_ground_overlay(f)
+        # self.write_fitbounds(f)
         f.write('\t}\n')
         f.write('</script>\n')
         f.write('</head>\n')
@@ -268,8 +282,12 @@ class GoogleMapPlotter(object):
             f.write('\t<h2>'+header+'</h2>')
         f.write(
             '\t<div id="container" style="overflow: hidden; padding: 20px;">\n')
+        # f.write(
+        #     '\t\t<div id="map_canvas" style="width: 512px; height: 512px; float:left; padding-right: 20px;"></div>\n')
+
         f.write(
-            '\t\t<div id="map_canvas" style="width: 512px; height: 512px; float:left; padding-right: 20px;"></div>\n')
+            '\t\t<div id="mapid" style="width: 512px; height: 512px; float:left; padding-right: 20px;"></div>'
+        )
 
         if img_path:
             f.write(
@@ -338,16 +356,14 @@ class GoogleMapPlotter(object):
 
     # TODO: Add support for mapTypeId: google.maps.MapTypeId.SATELLITE
     def write_map(self,  f):
-        f.write('\t\tvar centerlatlng = new google.maps.LatLng(%f, %f);\n' %
-                (self.center[0], self.center[1]))
-        f.write('\t\tvar myOptions = {\n')
-        f.write('\t\t\tzoom: %d,\n' % (self.zoom))
-        f.write('\t\t\tcenter: centerlatlng,\n')
-        f.write('\t\t\tmapTypeId: google.maps.MapTypeId.ROADMAP\n')
-        f.write('\t\t};\n')
-        f.write(
-            '\t\tvar map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);\n')
-        f.write('\n')
+        f.write('\t\tvar baseLayer = L.tileLayer(%f, {%f, mapid: "streets"});' %
+                (self.tile_url, self.attribution))
+        f.write('\t\tllMap = L.map("mapid", {\n')
+        f.write('\t\t\tzoomSnap: 0,\n')
+        f.write('\t\t\tmaxZoom: 18\n')
+        f.write('\t\t\t}).setView([%f, %f], %d);\n' %
+                (self.center[0], self.center[1], self.zoom))
+        f.write('\t\tbaseLayer.addTo(llMap);\n')
 
     def write_point(self, f, lat, lon, color, title, id):
         f.write('\t\tvar latlng = new google.maps.LatLng(%f, %f);\n' %
