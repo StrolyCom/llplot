@@ -264,7 +264,7 @@ class GoogleMapPlotter(object):
         self.write_map(f)
         # self.write_grids(f)
         # self.write_points(f)
-        # self.write_paths(f)
+        self.write_paths(f)
         # self.write_circles(f)
         # self.write_symbols(f)
         # self.write_shapes(f)
@@ -418,21 +418,19 @@ class GoogleMapPlotter(object):
 
         f.write('var PolylineCoordinates = [\n')
         for coordinate in path:
-            f.write('new google.maps.LatLng(%f, %f),\n' %
+            f.write('[%f, %f],\n' %
                     (coordinate[0], coordinate[1]))
         f.write('];\n')
         f.write('\n')
 
-        f.write('var Path = new google.maps.Polyline({\n')
-        f.write('clickable: %s,\n' % (str(clickable).lower()))
-        f.write('geodesic: %s,\n' % (str(geodesic).lower()))
-        f.write('path: PolylineCoordinates,\n')
-        f.write('strokeColor: "%s",\n' % (strokeColor))
-        f.write('strokeOpacity: %f,\n' % (strokeOpacity))
-        f.write('strokeWeight: %d\n' % (strokeWeight))
-        f.write('});\n')
-        f.write('\n')
-        f.write('Path.setMap(map);\n')
+        f.write('var Path = L.polyline( PolylineCoordinates, {\n')
+        # f.write('clickable: %s,\n' % (str(clickable).lower()))
+        # f.write('geodesic: %s,\n' % (str(geodesic).lower()))
+        # f.write('path: PolylineCoordinates,\n')
+        f.write('color: "%s",\n' % (strokeColor))
+        # f.write('strokeOpacity: %f,\n' % (strokeOpacity))
+        # f.write('strokeWeight: %d\n' % (strokeWeight))
+        f.write('}).addTo(llMap);\n')
         f.write('\n\n')
 
     def write_polygon(self, f, path, settings):
