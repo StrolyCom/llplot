@@ -355,7 +355,7 @@ class GoogleMapPlotter(object):
 
     # TODO: Add support for mapTypeId: google.maps.MapTypeId.SATELLITE
     def write_map(self,  f):
-        f.write('\t\tattribution = "%s"' % (self.attribution.replace('"', "'")))
+        f.write('\t\tattribution = "%s";\n' % (self.attribution.replace('"', "'")))
         f.write('\t\tvar baseLayer = L.tileLayer("%s", {\n' %
                 (self.tile_url))
         f.write('\t\t\t"attribution",\n\t\t\tmapid: "streets"});\n')
