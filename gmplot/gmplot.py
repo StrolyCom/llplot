@@ -26,12 +26,17 @@ def safe_iter(var):
         return [var]
 
 
-class GoogleMapPlotter(object):
+DEFAULT_ATTRIBUTION = 'CC-BY-SA. Imagery Mapbox'
 
-    def __init__(self, center_lat, center_lng, zoom, apikey=''):
+class LeafletPlotter(object):
+
+    def __init__(self, tile_url, center_lat, center_lng, zoom, apikey='',
+                 attribution=DEFAULT_ATTRIBUTION):
+        self.tile_url = tile_url
         self.center = (float(center_lat), float(center_lng))
         self.zoom = int(zoom)
         self.apikey = str(apikey)
+        self.attribution = attribution
         self.grids = None
         self.paths = []
         self.shapes = []
@@ -42,6 +47,7 @@ class GoogleMapPlotter(object):
         self.ground_overlays = []
         self.radpoints = []
         self.gridsetting = None
+        self.bounding_box = None
         self.coloricon = os.path.join(os.path.dirname(__file__), 'markers/%s.png')
         self.color_dict = mpl_color_map
         self.html_color_codes = html_color_codes
@@ -168,6 +174,10 @@ class GoogleMapPlotter(object):
             heatmap_points.append((lat, lng))
         self.heatmap_points.append((heatmap_points, settings))
 
+
+    def fit_bounds(self, nelat, nelng, swlat, swlng):
+        self.bounding_box = [nelat, nelng, swlat, swlng]
+
     def _process_heatmap_kwargs(self, settings_dict):
         settings_string = ''
         settings_string += "heatmap.set('threshold', %d);\n" % settings_dict['threshold']
@@ -225,40 +235,69 @@ class GoogleMapPlotter(object):
         shape = zip(lats, lngs)
         self.shapes.append((shape, settings))
 
-    def draw(self, htmlfile):
-        """Create the html file which include one google map and all points and paths. If 
+    def draw(self, htmlfile, img_path=None, header=None, footer=None):
+        """Create the html file which include one google map and all points and paths. If
         no string is provided, return the raw html.
         """
         f = open(htmlfile, 'w')
         f.write('<html>\n')
         f.write('<head>\n')
         f.write(
-            '<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />\n')
+            '<link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.4/dist/leaflet.css" '
+            'integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA==" '
+            'crossorigin=""/>\n')
+        f.write(
+            '<script src="https://unpkg.com/leaflet@1.3.4/dist/leaflet.js"'
+            'integrity="sha512-nMMmRyTVoLYqjP9hrbed9S+FzjZHW5gY1TWCHA5ckwXZBadntCNs8kEqAWdrb9O7rxbCaA4lKTIWjDXZxflOcA=="'
+            'crossorigin=""></script>'
+        )
         f.write(
             '<meta http-equiv="content-type" content="text/html; charset=UTF-8"/>\n')
-        f.write('<title>Google Maps - gmplot </title>\n')
-        if self.apikey:
-            f.write('<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=visualization&sensor=true_or_false&key=%s"></script>\n' % self.apikey )
-        else:
-            f.write('<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=visualization&sensor=true_or_false"></script>\n' )
+        f.write('<title>Leaflet - llplot </title>\n')
+        # if self.apikey:
+        #     f.write('<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=visualization&sensor=true_or_false&key=%s"></script>\n' % self.apikey )
+        # else:
+        #     f.write('<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=visualization&sensor=true_or_false"></script>\n' )
         f.write('<script type="text/javascript">\n')
+        f.write('\tvar llMap;\n')
         f.write('\tfunction initialize() {\n')
         self.write_map(f)
-        self.write_grids(f)
+        # self.write_grids(f)
         self.write_points(f)
         self.write_paths(f)
-        self.write_circles(f)
-        self.write_symbols(f)
-        self.write_shapes(f)
-        self.write_heatmap(f)
-        self.write_ground_overlay(f)
+        # self.write_circles(f)
+        # self.write_symbols(f)
+        # self.write_shapes(f)
+        # self.write_heatmap(f)
+        # self.write_ground_overlay(f)
+        self.write_fitbounds(f)
         f.write('\t}\n')
         f.write('</script>\n')
         f.write('</head>\n')
         f.write(
             '<body style="margin:0px; padding:0px;" onload="initialize()">\n')
+
+        if header:
+            f.write('\t<h2>'+header+'</h2>')
         f.write(
-            '\t<div id="map_canvas" style="width: 100%; height: 100%;"></div>\n')
+            '\t<div id="container" style="overflow: hidden; padding: 20px;">\n')
+        # f.write(
+        #     '\t\t<div id="map_canvas" style="width: 512px; height: 512px; float:left; padding-right: 20px;"></div>\n')
+
+        f.write(
+            '\t\t<div id="mapid" style="width: 512px; height: 512px; float:left; padding-right: 20px;"></div>'
+        )
+
+        if img_path:
+            f.write(
+                '\t\t<div id="image" height: 512px; overflow: hidden; padding-left: 20px;">')
+            f.write('\t\t\t<img src="'+img_path+'" alt="mapimage" height="512">')
+            f.write('\t\t</div>\n')
+        f.write(
+            '\t</div>\n')
+
+        if footer:
+            f.write('\t<div>'+footer+'</div>')
         f.write('</body>\n')
         f.write('</html>\n')
         f.close()
@@ -295,8 +334,8 @@ class GoogleMapPlotter(object):
             self.write_polyline(f, line, settings)
 
     def write_points(self, f):
-        for point in self.points:
-            self.write_point(f, point[0], point[1], point[2], point[3])
+        for id, point in enumerate(self.points):
+            self.write_point(f, point[0], point[1], point[2], point[3], id)
 
     def write_circles(self, f):
         for circle, settings in self.circles:
@@ -316,28 +355,37 @@ class GoogleMapPlotter(object):
 
     # TODO: Add support for mapTypeId: google.maps.MapTypeId.SATELLITE
     def write_map(self,  f):
-        f.write('\t\tvar centerlatlng = new google.maps.LatLng(%f, %f);\n' %
-                (self.center[0], self.center[1]))
-        f.write('\t\tvar myOptions = {\n')
-        f.write('\t\t\tzoom: %d,\n' % (self.zoom))
-        f.write('\t\t\tcenter: centerlatlng,\n')
-        f.write('\t\t\tmapTypeId: google.maps.MapTypeId.ROADMAP\n')
-        f.write('\t\t};\n')
-        f.write(
-            '\t\tvar map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);\n')
-        f.write('\n')
+        f.write('\t\tvar MarkerIcon = L.Icon.extend({\n'
+                '\t\t\toptions: {\n'
+                '\t\t\t\ticonSize:     [21, 34],\n'
+                '\t\t\t\ticonAnchor:   [22, 34],\n'
+                '\t\t\t\tpopupAnchor:  [-11, -34]\n'
+                '\t\t\t}});\n')
+        f.write('\t\tattribution = "%s";\n' % (self.attribution.replace('"', "'")))
+        f.write('\t\tvar baseLayer = L.tileLayer("%s", {\n' %
+                (self.tile_url))
+        f.write('\t\t\tattribution, \n\t\t\tmapid: "streets"});\n')
+        f.write('\t\tllMap = L.map("mapid", {\n')
+        f.write('\t\t\tzoomSnap: 0,\n')
+        f.write('\t\t\tmaxZoom: 18\n')
+        f.write('\t\t\t}).setView([%f, %f], %d);\n' %
+                (self.center[0], self.center[1], self.zoom))
+        f.write('\t\tbaseLayer.addTo(llMap);\n')
 
-    def write_point(self, f, lat, lon, color, title):
-        f.write('\t\tvar latlng = new google.maps.LatLng(%f, %f);\n' %
+    def write_point(self, f, lat, lon, color, title, id):
+        f.write('\t\tvar latlng = [%f, %f];\n' %
                 (lat, lon))
-        f.write('\t\tvar img = new google.maps.MarkerImage(\'%s\');\n' %
+        f.write('\t\tvar img = new MarkerIcon({iconUrl: \'%s\'});\n' %
                 (self.coloricon % color))
-        f.write('\t\tvar marker = new google.maps.Marker({\n')
+        f.write('\t\tvar marker'+str(id)+' = L.marker(latlng, {\n')
         f.write('\t\ttitle: "%s",\n' % title)
         f.write('\t\ticon: img,\n')
-        f.write('\t\tposition: latlng\n')
         f.write('\t\t});\n')
-        f.write('\t\tmarker.setMap(map);\n')
+
+        if title != "no implementation":
+            f.write('\t\tmarker'+str(id)+'.bindPopup("'+title+'");\n')
+
+        f.write('\t\tmarker'+str(id)+'.addTo(llMap);\n')
         f.write('\n')
 
     def write_symbol(self, f, symbol, settings):
@@ -366,29 +414,26 @@ class GoogleMapPlotter(object):
                               fillColor=fillColor, fillOpacity=fillOpacity))
 
     def write_polyline(self, f, path, settings):
-        clickable = False
-        geodesic = True
+        # clickable = False
+        # geodesic = True
         strokeColor = settings.get('color') or settings.get('edge_color')
         strokeOpacity = settings.get('edge_alpha')
         strokeWeight = settings.get('edge_width')
 
         f.write('var PolylineCoordinates = [\n')
         for coordinate in path:
-            f.write('new google.maps.LatLng(%f, %f),\n' %
+            f.write('[%f, %f],\n' %
                     (coordinate[0], coordinate[1]))
         f.write('];\n')
         f.write('\n')
 
-        f.write('var Path = new google.maps.Polyline({\n')
-        f.write('clickable: %s,\n' % (str(clickable).lower()))
-        f.write('geodesic: %s,\n' % (str(geodesic).lower()))
-        f.write('path: PolylineCoordinates,\n')
-        f.write('strokeColor: "%s",\n' % (strokeColor))
-        f.write('strokeOpacity: %f,\n' % (strokeOpacity))
-        f.write('strokeWeight: %d\n' % (strokeWeight))
-        f.write('});\n')
-        f.write('\n')
-        f.write('Path.setMap(map);\n')
+        f.write('var Path = L.polyline( PolylineCoordinates, {\n')
+        # f.write('clickable: %s,\n' % (str(clickable).lower()))
+        # f.write('geodesic: %s,\n' % (str(geodesic).lower()))
+        f.write('color: "%s",\n' % (strokeColor))
+        f.write('opacity: %f,\n' % (strokeOpacity))
+        f.write('weight: %d\n' % (strokeWeight))
+        f.write('}).addTo(llMap);\n')
         f.write('\n\n')
 
     def write_polygon(self, f, path, settings):
@@ -448,9 +493,22 @@ class GoogleMapPlotter(object):
             f.write('imageBounds);' + '\n')
             f.write('groundOverlay.setMap(map);' + '\n')
 
+    def write_fitbounds(self, f):
+        if self.bounding_box is None:
+            return
+        nelat = self.bounding_box[0]
+        nelng = self.bounding_box[1]
+        swlat = self.bounding_box[2]
+        swlng = self.bounding_box[3]
+
+        f.write('var bounds = [[%f, %f], [%f, %f]];\n' %
+                (self.bounding_box[0], self.bounding_box[1],
+                 self.bounding_box[2], self.bounding_box[3]))
+        f.write('llMap.fitBounds(bounds);\n')
+
 if __name__ == "__main__":
 
-    mymap = GoogleMapPlotter(37.428, -122.145, 16)
+    mymap = LeafletPlotter(37.428, -122.145, 16)
     # mymap = GoogleMapPlotter.from_geocode("Stanford University")
 
     mymap.grid(37.42, 37.43, 0.001, -122.15, -122.14, 0.001)
