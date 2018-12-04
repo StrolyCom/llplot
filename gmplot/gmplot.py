@@ -358,7 +358,7 @@ class GoogleMapPlotter(object):
         f.write('\t\tattribution = "%s";\n' % (self.attribution.replace('"', "'")))
         f.write('\t\tvar baseLayer = L.tileLayer("%s", {\n' %
                 (self.tile_url))
-        f.write('\t\t\t"attribution",\n\t\t\tmapid: "streets"});\n')
+        f.write('\t\t\tattribution, \n\t\t\tmapid: "streets"});\n')
         f.write('\t\tllMap = L.map("mapid", {\n')
         f.write('\t\t\tzoomSnap: 0,\n')
         f.write('\t\t\tmaxZoom: 18\n')
