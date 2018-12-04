@@ -355,6 +355,12 @@ class GoogleMapPlotter(object):
 
     # TODO: Add support for mapTypeId: google.maps.MapTypeId.SATELLITE
     def write_map(self,  f):
+        f.write('\t\tvar MarkerIcon = L.Icon.extend({\n'
+                '\t\t\toptions: {\n'
+                '\t\t\t\ticonSize:     [21, 34],\n'
+                '\t\t\t\ticonAnchor:   [22, 34],\n'
+                '\t\t\t\tpopupAnchor:  [-3, -30]\n'
+                '\t\t\t});\n')
         f.write('\t\tattribution = "%s";\n' % (self.attribution.replace('"', "'")))
         f.write('\t\tvar baseLayer = L.tileLayer("%s", {\n' %
                 (self.tile_url))
@@ -369,7 +375,7 @@ class GoogleMapPlotter(object):
     def write_point(self, f, lat, lon, color, title, id):
         f.write('\t\tvar latlng = [%f, %f];\n' %
                 (lat, lon))
-        f.write('\t\tvar img = new LeafIcon({iconUrl: \'%s\'});\n' %
+        f.write('\t\tvar img = new L.MarkerIcon({iconUrl: \'%s\'});\n' %
                 (self.coloricon % color))
         f.write('\t\tvar marker'+str(id)+' = L.marker(latlng, {\n')
         f.write('\t\ttitle: "%s",\n' % title)
