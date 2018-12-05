@@ -114,3 +114,5 @@ Inspired by Yifei Jiang's (jiangyifei@gmail.com) pygmaps_ module.
 
 This is fork from the original repository by Michael Woods
 .. _vgm64: https://github.com/vgm64
+
+This software is not being used commercially in any part of the platform, in any way. It was used as a part of visualization techniques experiments.
