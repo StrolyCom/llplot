@@ -111,3 +111,6 @@ Install easily with ``pip install git+https://github.com/StrolyCom/gmplot.git#eg
 Inspired by Yifei Jiang's (jiangyifei@gmail.com) pygmaps_ module.
 
 .. _pygmaps: http://code.google.com/p/pygmaps/
+
+This is fork from the original repository by Michael Woods
+.. _vgm64: https://github.com/vgm64
