@@ -8,7 +8,7 @@ make creating exploratory map views effortless. Here's a crash course:
 
 ::
 
-    from gmplot import gmplot
+    from llplot import llplot
 
     mapbox_token = "<your token>"
     # Place map
