@@ -8,8 +8,8 @@ import warnings
 
 from collections import namedtuple
 
-from gmplot.color_dicts import mpl_color_map, html_color_codes
-from gmplot.google_maps_templates import SYMBOLS, CIRCLE
+from llplot.color_dicts import mpl_color_map, html_color_codes
+from llplot.google_maps_templates import SYMBOLS, CIRCLE
 
 
 Symbol = namedtuple('Symbol', ['symbol', 'lat', 'long', 'size'])
@@ -207,8 +207,8 @@ class LeafletPlotter(object):
         setting the image container
         :return: None
         Example use:
-        import gmplot
-        gmap = gmplot.GoogleMapPlotter(37.766956, -122.438481, 13)
+        import llplot
+        gmap = llplot.GoogleMapPlotter(37.766956, -122.438481, 13)
         bounds_dict = {'north':37.832285, 'south': 37.637336, 'west': -122.520364, 'east': -122.346922}
         gmap.ground_overlay('http://explore.museumca.org/creeks/images/TopoSFCreeks.jpg', bounds_dict)
         gmap.draw("my_map.html")

@@ -8,11 +8,11 @@ make creating exploratory map views effortless. Here's a crash course:
 
 ::
 
-    from gmplot import gmplot
+    from llplot import llplot
 
     mapbox_token = "<your token>"
     # Place map
-    gmap = gmplot.LeafletPlotter(
+    gmap = llplot.LeafletPlotter(
         "https://{s}.tiles.mapbox.com/v4/mapbox.{mapid}/{z}/{x}/{y}@2x.png?"
         "access_token=" + mapbox_token,
         37.766956, -122.438481, 13
@@ -57,7 +57,7 @@ NOTE: Not all the write functions have been migrated from Google Maps to Leaflet
 
     mapbox_token = "<your token>"
     # Create map
-    map = gmplot.LeafletPlotter(
+    map = llplot.LeafletPlotter(
         "https://{s}.tiles.mapbox.com/v4/mapbox.{mapid}/{z}/{x}/{y}@2x.png?"
         "access_token=" + mapbox_token,
         37.766956, -122.438481, 13
@@ -83,14 +83,14 @@ Geocoding
 
 NOTE: NOT MIGRATE YET
 
-``gmplot`` contains a simple wrapper around Google's geocoding service enabling
+``llplot`` contains a simple wrapper around Google's geocoding service enabling
 map initilization to the location of your choice. Rather than providing latitude,
-longitude, and zoom level during initialization, grab your gmplot instance with
+longitude, and zoom level during initialization, grab your llplot instance with
 a location:
 
 ::
 
-    gmap = gmplot.GoogleMapPlotter.from_geocode("San Francisco")
+    gmap = llplot.GoogleMapPlotter.from_geocode("San Francisco")
 
 Plot types
 ----------
@@ -106,7 +106,7 @@ Plot types
 Misc.
 -----
 
-Install easily with ``pip install git+https://github.com/StrolyCom/gmplot.git#egg=gmplot`` directly from this repo.
+Install easily with ``pip install git+https://github.com/StrolyCom/llplot.git#egg=llplot`` directly from this repo.
 
 Inspired by Yifei Jiang's (jiangyifei@gmail.com) pygmaps_ module.
 
