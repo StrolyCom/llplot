@@ -11,7 +11,7 @@ setup(
     version = __version__,
     author = 'Michael Woods',
     author_email = 'physicsmichael@gmail.com',
-    url = 'https://github.com/vgm64/gmplot',
+    url = 'https://github.com/StrolyCom/llplot',
     description = 'Provide a matplotlib like interface to plotting data with Google Maps',
     long_description=read('README.rst'),
     license='MIT',
