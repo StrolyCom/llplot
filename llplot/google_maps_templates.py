@@ -2,21 +2,13 @@ EARTH_RADIUS = 6378.8  # in KM
 
 
 CIRCLE = """
-var center = new google.maps.LatLng({lat}, {long});
-var radius = {size};
-var circle = new google.maps.Circle({{
-    strokeColor: '{strokeColor}',
-    strokeOpacity: {strokeOpacity},
-    strokeWeight: {strokeWeight},
-    fillColor: '{fillColor}',
-    fillOpacity: {fillOpacity},
-    map: map,
-    center: center,
-    radius: radius
-  }});
-
-circle.setMap(map);
-
+var circle = L.circle({latlng}, {radius}, {{
+     strokeColor: '{strokeColor}',
+     strokeOpacity: {strokeOpacity},
+     strokeWeight: {strokeWeight},
+     fillColor: '{fillColor}',
+     fillOpacity: {fillOpacity},
+	}}).addTo(llMap);
 """
 
 # FIXME: This generate a Xmark in cartesian frame rather than in lat/long.
