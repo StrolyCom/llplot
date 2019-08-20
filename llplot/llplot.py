@@ -265,7 +265,7 @@ class LeafletPlotter(object):
         # self.write_grids(f)
         self.write_points(f)
         self.write_paths(f)
-        # self.write_circles(f)
+        self.write_circles(f)
         # self.write_symbols(f)
         # self.write_shapes(f)
         # self.write_heatmap(f)
@@ -339,7 +339,7 @@ class LeafletPlotter(object):
 
     def write_circles(self, f):
         for circle, settings in self.circles:
-            self.write_circle(f, circle[0], circle[1], circle[2], settings)
+            self.write_circle(f, circle[0][0], circle[1], circle[2], settings)
 
     def write_symbols(self, f):
         for symbol, settings in self.symbols:
@@ -403,13 +403,14 @@ class LeafletPlotter(object):
                                 strokeOpacity=strokeOpacity, strokeWeight=strokeWeight,
                                 fillColor=fillColor, fillOpacity=fillOpacity))
 
-    def write_circle(self, f, lat, long, size, settings):
+
+    def write_circle(self, f, lat, lng, radius, settings):
         strokeColor = settings.get('color') or settings.get('edge_color')
         strokeOpacity = settings.get('edge_alpha')
         strokeWeight = settings.get('edge_width')
         fillColor = settings.get('face_color')
         fillOpacity = settings.get('face_alpha')
-        f.write(CIRCLE.format(lat=lat, long=long, size=size, strokeColor=strokeColor,
+        f.write(CIRCLE.format(latlng=[lat, lng], radius=radius, strokeColor=strokeColor,
                               strokeOpacity=strokeOpacity, strokeWeight=strokeWeight,
                               fillColor=fillColor, fillOpacity=fillOpacity))
 
