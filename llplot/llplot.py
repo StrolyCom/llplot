@@ -406,20 +406,21 @@ class LeafletPlotter(object):
 
     def write_circle(self, f, lat, lng, radius, settings):
 
-        stroke = 1 if settings.get('stroke') == True else 0
+        stroke = 0 if settings.get('stroke') == False else 1
+        fill = 0 if settings.get('fill') == False else 1
         strokeColor = settings.get('color') or settings.get('edge_color')
         strokeOpacity = settings.get('opacity') or 1.0
         strokeWeight = settings.get('weight') or 3
         lineCap = settings.get('line_cap') or 'round'
         lineJoin = settings.get('line_join') or 'round'
-        dashArray = settings.get('dash_array')
-        dashOffset = settings.get('dash_offset')
-        fillColor = settings.get('fill_color')
-        fillOpacity = settings.get('fill_opacity')
+        dashArray = settings.get('dash_array') or ''
+        dashOffset = settings.get('dash_offset') or ''
+        fillColor = settings.get('fill_color') or strokeColor
+        fillOpacity = settings.get('fill_opacity') or 0.2
         fillRule = settings.get('fill_rule') or "evenodd"
-        bubblingMouseEvents = 1 if settings.get('bubbling_mouse_events') == True else 0
+        bubblingMouseEvents = 0 if settings.get('bubbling_mouse_events') == False else 1
         f.write(CIRCLE.format(latlng=[lat, lng], radius=radius, strokeColor=strokeColor,
-                              strokeOpacity=strokeOpacity, strokeWeight=strokeWeight,
+                              strokeOpacity=strokeOpacity, strokeWeight=strokeWeight,fill=fill,
                               lineCap=lineCap, lineJoin=lineJoin, dashArray=dashArray,
                               dashOffset=dashOffset, fillRule=fillRule, bubblingMouseEvents=bubblingMouseEvents,
                               fillColor=fillColor, fillOpacity=fillOpacity, stroke=stroke))
