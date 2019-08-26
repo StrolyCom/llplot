@@ -405,14 +405,23 @@ class LeafletPlotter(object):
 
 
     def write_circle(self, f, lat, lng, radius, settings):
+        stroke = settings.get('stroke') or True
         strokeColor = settings.get('color') or settings.get('edge_color')
-        strokeOpacity = settings.get('edge_alpha')
-        strokeWeight = settings.get('edge_width')
-        fillColor = settings.get('face_color')
-        fillOpacity = settings.get('face_alpha')
+        strokeOpacity = settings.get('opacity')
+        strokeWeight = settings.get('weight')
+        lineCap = settings.get('line_cap') or 'round'
+        lineJoin = settings.get('line_join') or 'round'
+        dashArray = settings.get('dash_array')
+        dashOffset = settings.get('dash_offset')
+        fillColor = settings.get('fill_color')
+        fillOpacity = settings.get('fill_opacity')
+        fillRule = settings.get('fill_rule') or "evenodd"
+        bubblingMouseEvents = settings.get('bubbling_mouse_events') or True
         f.write(CIRCLE.format(latlng=[lat, lng], radius=radius, strokeColor=strokeColor,
                               strokeOpacity=strokeOpacity, strokeWeight=strokeWeight,
-                              fillColor=fillColor, fillOpacity=fillOpacity))
+                              lineCap=lineCap, lineJoin=lineJoin, dashArray=dashArray,
+                              dashOffset=dashOffset, fillRule=fillRule, bubblingMouseEvents=bubblingMouseEvents,
+                              fillColor=fillColor, fillOpacity=fillOpacity, stroke=stroke))
 
     def write_polyline(self, f, path, settings):
         # clickable = False
