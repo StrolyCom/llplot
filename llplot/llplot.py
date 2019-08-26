@@ -339,7 +339,7 @@ class LeafletPlotter(object):
 
     def write_circles(self, f):
         for circle, settings in self.circles:
-            self.write_circle(f, circle[0][0], circle[1], circle[2], settings)
+            self.write_circle(f, circle[0], circle[1], circle[2], settings)
 
     def write_symbols(self, f):
         for symbol, settings in self.symbols:
