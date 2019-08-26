@@ -405,7 +405,8 @@ class LeafletPlotter(object):
 
 
     def write_circle(self, f, lat, lng, radius, settings):
-        stroke = settings.get('stroke') or True
+
+        stroke = 1 if settings.get('stroke') == True else 0
         strokeColor = settings.get('color') or settings.get('edge_color')
         strokeOpacity = settings.get('opacity')
         strokeWeight = settings.get('weight')
@@ -416,7 +417,7 @@ class LeafletPlotter(object):
         fillColor = settings.get('fill_color')
         fillOpacity = settings.get('fill_opacity')
         fillRule = settings.get('fill_rule') or "evenodd"
-        bubblingMouseEvents = settings.get('bubbling_mouse_events') or True
+        bubblingMouseEvents = 1 if settings.get('bubbling_mouse_events') == True else 0
         f.write(CIRCLE.format(latlng=[lat, lng], radius=radius, strokeColor=strokeColor,
                               strokeOpacity=strokeOpacity, strokeWeight=strokeWeight,
                               lineCap=lineCap, lineJoin=lineJoin, dashArray=dashArray,
