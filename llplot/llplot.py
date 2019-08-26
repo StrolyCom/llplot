@@ -134,6 +134,15 @@ class LeafletPlotter(object):
         settings["stroke"] = 0 if kwargs.get('stroke') == False else 1
         settings["fill"] = 0 if kwargs.get('fill') == False else 1
         settings["fill_color"] = kwargs.get('fill_color')
+        settings["opacity"] = kwargs.get('opacity') or 1.0
+        settings["weight"] = kwargs.get('weight') or 3
+        settings["line_cap"] = kwargs.get('line_cap') or "round"
+        settings["line_join"] = kwargs.get('line_join') or "round"
+        settings["dash_array"] = kwargs.get('dash_array') or ""
+        settings["dash_offset"] = kwargs.get('dash_offset') or ""
+        settings["fill_opacity"] = kwargs.get('fill_opacity') or 0.2
+        settings["fill_rule"] = kwargs.get('fill_rule') or "evenodd"
+        settings["fill_rule"] = 0 if kwargs.get('fill_rule') == False else 1
 
         # Need to replace "plum" with "#DDA0DD" and "c" with "#00FFFF" (cyan).
         for key, color in settings.items():
@@ -419,7 +428,7 @@ class LeafletPlotter(object):
         lineJoin = settings.get('line_join') or 'round'
         dashArray = settings.get('dash_array') or ''
         dashOffset = settings.get('dash_offset') or ''
-        fillColor = settings.get('fill_color')
+        fillColor = settings.get('fill_color') or strokeColor
         fillOpacity = settings.get('fill_opacity') or 0.2
         fillRule = settings.get('fill_rule') or "evenodd"
         bubblingMouseEvents = 0 if settings.get('bubbling_mouse_events') == False else 1
