@@ -131,6 +131,10 @@ class LeafletPlotter(object):
                             settings["edge_color"] or \
                             settings["face_color"]
 
+        settings["stroke"] = 0 if kwargs.get('stroke') == False else 1
+        settings["fill"] = 0 if kwargs.get('fill') == False else 1
+        settings["fill_color"] = kwargs.get('fill_color')
+
         # Need to replace "plum" with "#DDA0DD" and "c" with "#00FFFF" (cyan).
         for key, color in settings.items():
             if 'color' in key:
