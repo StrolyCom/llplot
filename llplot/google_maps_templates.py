@@ -3,11 +3,19 @@ EARTH_RADIUS = 6378.8  # in KM
 
 CIRCLE = """
 var circle = L.circle({latlng}, {radius}, {{
-     strokeColor: '{strokeColor}',
-     strokeOpacity: {strokeOpacity},
-     strokeWeight: {strokeWeight},
+     stroke: '{stroke}',
+     color: '{strokeColor}',
+     opacity: {strokeOpacity},
+     weight: {strokeWeight},
+     lineCap: {lineCap},
+     lineJoin: {lineJoin},
+     dashArray: {dashArray},
+     dashOffset: {dashOffset},
+     fillRule: '{fillRule}',
      fillColor: '{fillColor}',
      fillOpacity: {fillOpacity},
+     bubblingMouseEvents: {bubblingMouseEvents},
+     
 	}}).addTo(llMap);
 """
 
