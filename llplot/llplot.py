@@ -405,7 +405,7 @@ class LeafletPlotter(object):
 
 
     def write_circle(self, f, lat, lng, radius, settings):
-        stroke = settings.get('stroke') or True
+        stroke = settings.get('stroke').lower() or True
         strokeColor = settings.get('color') or settings.get('edge_color')
         strokeOpacity = settings.get('opacity')
         strokeWeight = settings.get('weight')
