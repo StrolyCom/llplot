@@ -415,7 +415,7 @@ class LeafletPlotter(object):
         lineJoin = settings.get('line_join') or 'round'
         dashArray = settings.get('dash_array') or ''
         dashOffset = settings.get('dash_offset') or ''
-        fillColor = settings.get('fill_color') or strokeColor
+        fillColor = settings.get('fill_color')
         fillOpacity = settings.get('fill_opacity') or 0.2
         fillRule = settings.get('fill_rule') or "evenodd"
         bubblingMouseEvents = 0 if settings.get('bubbling_mouse_events') == False else 1
