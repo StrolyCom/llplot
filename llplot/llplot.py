@@ -408,8 +408,8 @@ class LeafletPlotter(object):
 
         stroke = 1 if settings.get('stroke') == True else 0
         strokeColor = settings.get('color') or settings.get('edge_color')
-        strokeOpacity = settings.get('opacity')
-        strokeWeight = settings.get('weight')
+        strokeOpacity = settings.get('opacity') or 1.0
+        strokeWeight = settings.get('weight') or 3
         lineCap = settings.get('line_cap') or 'round'
         lineJoin = settings.get('line_join') or 'round'
         dashArray = settings.get('dash_array')
