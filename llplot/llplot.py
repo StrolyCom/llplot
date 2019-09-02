@@ -131,6 +131,19 @@ class LeafletPlotter(object):
                             settings["edge_color"] or \
                             settings["face_color"]
 
+        settings["stroke"] = 0 if kwargs.get('stroke') == False else 1
+        settings["fill"] = 0 if kwargs.get('fill') == False else 1
+        settings["fill_color"] = kwargs.get('fill_color')
+        settings["opacity"] = kwargs.get('opacity') or 1.0
+        settings["weight"] = kwargs.get('weight') or 3
+        settings["line_cap"] = kwargs.get('line_cap') or "round"
+        settings["line_join"] = kwargs.get('line_join') or "round"
+        settings["dash_array"] = kwargs.get('dash_array') or ""
+        settings["dash_offset"] = kwargs.get('dash_offset') or ""
+        settings["fill_opacity"] = kwargs.get('fill_opacity') or 0.2
+        settings["fill_rule"] = kwargs.get('fill_rule') or "evenodd"
+        settings["fill_rule"] = 0 if kwargs.get('fill_rule') == False else 1
+
         # Need to replace "plum" with "#DDA0DD" and "c" with "#00FFFF" (cyan).
         for key, color in settings.items():
             if 'color' in key:
@@ -265,7 +278,7 @@ class LeafletPlotter(object):
         # self.write_grids(f)
         self.write_points(f)
         self.write_paths(f)
-        # self.write_circles(f)
+        self.write_circles(f)
         # self.write_symbols(f)
         # self.write_shapes(f)
         # self.write_heatmap(f)
@@ -403,15 +416,27 @@ class LeafletPlotter(object):
                                 strokeOpacity=strokeOpacity, strokeWeight=strokeWeight,
                                 fillColor=fillColor, fillOpacity=fillOpacity))
 
-    def write_circle(self, f, lat, long, size, settings):
+
+    def write_circle(self, f, lat, lng, radius, settings):
+
+        stroke = 0 if settings.get('stroke') == False else 1
+        fill = 0 if settings.get('fill') == False else 1
         strokeColor = settings.get('color') or settings.get('edge_color')
-        strokeOpacity = settings.get('edge_alpha')
-        strokeWeight = settings.get('edge_width')
-        fillColor = settings.get('face_color')
-        fillOpacity = settings.get('face_alpha')
-        f.write(CIRCLE.format(lat=lat, long=long, size=size, strokeColor=strokeColor,
-                              strokeOpacity=strokeOpacity, strokeWeight=strokeWeight,
-                              fillColor=fillColor, fillOpacity=fillOpacity))
+        strokeOpacity = settings.get('opacity') or 1.0
+        strokeWeight = settings.get('weight') or 3
+        lineCap = settings.get('line_cap') or 'round'
+        lineJoin = settings.get('line_join') or 'round'
+        dashArray = settings.get('dash_array') or ''
+        dashOffset = settings.get('dash_offset') or ''
+        fillColor = settings.get('fill_color') or strokeColor
+        fillOpacity = settings.get('fill_opacity') or 0.2
+        fillRule = settings.get('fill_rule') or "evenodd"
+        bubblingMouseEvents = 0 if settings.get('bubbling_mouse_events') == False else 1
+        f.write(CIRCLE.format(latlng=[lat, lng], radius=radius, strokeColor=strokeColor,
+                              strokeOpacity=strokeOpacity, strokeWeight=strokeWeight,fill=fill,
+                              lineCap=lineCap, lineJoin=lineJoin, dashArray=dashArray,
+                              dashOffset=dashOffset, fillRule=fillRule, bubblingMouseEvents=bubblingMouseEvents,
+                              fillColor=fillColor, fillOpacity=fillOpacity, stroke=stroke))
 
     def write_polyline(self, f, path, settings):
         # clickable = False
