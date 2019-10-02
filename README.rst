@@ -78,20 +78,6 @@ NOTE: Not all the write functions have been migrated from Google Maps to Leaflet
     # also, by default if a marker has title it is shown as a pop-up
 
 
-Geocoding
----------
-
-NOTE: NOT MIGRATE YET
-
-``llplot`` contains a simple wrapper around Google's geocoding service enabling
-map initilization to the location of your choice. Rather than providing latitude,
-longitude, and zoom level during initialization, grab your llplot instance with
-a location:
-
-::
-
-    gmap = llplot.GoogleMapPlotter.from_geocode("San Francisco")
-
 Plot types
 ----------
 
