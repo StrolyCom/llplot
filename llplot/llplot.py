@@ -66,7 +66,7 @@ class LeafletPlotter(object):
                                            })
         print(q_string)
 
-        geocode = requests.post(
+        geocode = requests.get(
             'https://nominatim.openstreetmap.org/?"%s"' % q_string.strip())
         geocode = geocode.json()
 
