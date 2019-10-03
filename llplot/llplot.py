@@ -64,10 +64,9 @@ class LeafletPlotter(object):
                                            'format': 'json',
                                            'addressdetails': 1,
                                            })
-        print(q_string)
+        request_url = 'https://nominatim.openstreetmap.org/?%s' % q_string
 
-        geocode = requests.get(
-            'https://nominatim.openstreetmap.org/?"%s"' % q_string.strip())
+        geocode = requests.get(request_url)
         geocode = geocode.json()
 
         try:
