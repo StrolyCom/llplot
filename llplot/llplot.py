@@ -70,7 +70,7 @@ class LeafletPlotter(object):
         geocode = geocode.json()
 
         try:
-            return geocode[0]['lat'], geocode[0]['lon']
+            return geocode[0]['lat'], geocode[0]['lon'], 13
         except:
             print(geocode)
 
