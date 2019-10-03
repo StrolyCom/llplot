@@ -63,7 +63,6 @@ class LeafletPlotter(object):
         q_string = urllib.parse.urlencode({'q': location_string,
                                            'format': 'json',
                                            'addressdetails': 1,
-                                           'limit': 1
                                            })
         print(q_string)
 
@@ -72,7 +71,7 @@ class LeafletPlotter(object):
         geocode = geocode.json()
 
         try:
-            return geocode['lat'], geocode['lon']
+            return geocode[0]['lat'], geocode[0]['lon']
         except:
             print(geocode)
 
