@@ -69,8 +69,8 @@ class LeafletPlotter(object):
         geocode = requests.post(
             'https://nominatim.openstreetmap.org/?"%s"' % q_string)
         geocode = geocode.json()
-        print(q_string)
-        return geocode[0]['lat'], geocode[0]['lon']
+        print(geocode)
+        return geocode['lat'], geocode['lon']
 
     def grid(self, slat, elat, latin, slng, elng, lngin):
         self.gridsetting = [slat, elat, latin, slng, elng, lngin]
