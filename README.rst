@@ -77,6 +77,25 @@ NOTE: Not all the write functions have been migrated from Google Maps to Leaflet
 
     # also, by default if a marker has title it is shown as a pop-up
 
+Geocoding
+---------
+
+``llplot`` contains a simple wrapper around Nominatim geocoding service enabling
+map initilization to the location of your choice. Rather than providing latitude,
+longitude, and zoom level during initialization, grab your llplot instance with
+a location:
+
+::
+
+    import llplot as lp
+
+    mymap = lp.LeafletPlotter(
+                "https://{s}.tiles.mapbox.com/v4/mapbox.{mapid}/{z}/{x}/{y}@2x.png?"
+                "access_token=ACCESS_TOKEN",
+                34.6901, 135.1956, 10
+            )
+    print(mymap.geocode("Stanford University"))
+    # Should return ('37.43131385', '-122.169365354983')
 
 Plot types
 ----------
