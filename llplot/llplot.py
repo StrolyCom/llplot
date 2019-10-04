@@ -497,6 +497,7 @@ class LeafletPlotter(object):
             'integrity="sha256-65UqrlgGoRAnKfKRuriH3eeDrOhZgZo1SCenduc+SGo=" '
             'crossorigin="anonymous"></script>'
         )
+        print(self.heatmap_points)
 
         f.write(HEATMAP.format(latlng=self.heatmap_points[0][0], radius=self.heatmap_points[0][1]["radius"]))
             # f.write('var heatmap_points = [\n')
