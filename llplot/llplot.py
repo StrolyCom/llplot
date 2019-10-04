@@ -499,7 +499,8 @@ class LeafletPlotter(object):
         )
         print(self.heatmap_points)
 
-        f.write(HEATMAP.format(latlng=self.heatmap_points[0][0], radius=self.heatmap_points[0][1]["radius"]))
+        f.write(HEATMAP.format(latlng=self.heatmap_points[0][0],radius=25))
+        f.write(self.heatmap_points[0][1])
             # f.write('var heatmap_points = [\n')
             # for heatmap_lat, heatmap_lng in heatmap_points:
             #     f.write('new google.maps.LatLng(%f, %f),\n' %
