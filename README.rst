@@ -12,7 +12,7 @@ make creating exploratory map views effortless. Here's a crash course:
 
     mapbox_token = "<your token>"
     # Place map
-    gmap = llplot.LeafletPlotter(
+    lmap = llplot.LeafletPlotter(
         "https://{s}.tiles.mapbox.com/v4/mapbox.{mapid}/{z}/{x}/{y}@2x.png?"
         "access_token=" + mapbox_token,
         37.766956, -122.438481, 13
@@ -32,14 +32,14 @@ make creating exploratory map views effortless. Here's a crash course:
         (37.764028, -122.510347),
         (37.771269, -122.511015)
         ])
-    gmap.plot(golden_gate_park_lats, golden_gate_park_lons, 'cornflowerblue', edge_width=10)
+    lmap.plot(golden_gate_park_lats, golden_gate_park_lons, 'cornflowerblue', edge_width=10)
 
     # Marker
     hidden_gem_lat, hidden_gem_lon = 37.770776, -122.461689
-    gmap.marker(hidden_gem_lat, hidden_gem_lon, 'cornflowerblue')
+    lmap.marker(hidden_gem_lat, hidden_gem_lon, 'cornflowerblue')
 
     # Draw
-    gmap.draw("my_map.html")
+    lmap.draw("my_map.html")
 
 .. image:: https://i.imgur.com/12KXJS3.png
 
@@ -77,20 +77,25 @@ NOTE: Not all the write functions have been migrated from Google Maps to Leaflet
 
     # also, by default if a marker has title it is shown as a pop-up
 
-
 Geocoding
 ---------
 
-NOTE: NOT MIGRATE YET
-
-``llplot`` contains a simple wrapper around Google's geocoding service enabling
+``llplot`` contains a simple wrapper around Nominatim geocoding service enabling
 map initilization to the location of your choice. Rather than providing latitude,
 longitude, and zoom level during initialization, grab your llplot instance with
 a location:
 
 ::
 
-    gmap = llplot.GoogleMapPlotter.from_geocode("San Francisco")
+    import llplot as lp
+
+    mymap = lp.LeafletPlotter(
+                "https://{s}.tiles.mapbox.com/v4/mapbox.{mapid}/{z}/{x}/{y}@2x.png?"
+                "access_token=ACCESS_TOKEN",
+                34.6901, 135.1956, 10
+            )
+    print(mymap.geocode("Stanford University"))
+    # Should return ('37.43131385', '-122.169365354983')
 
 Plot types
 ----------
