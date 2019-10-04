@@ -12,7 +12,7 @@ make creating exploratory map views effortless. Here's a crash course:
 
     mapbox_token = "<your token>"
     # Place map
-    gmap = llplot.LeafletPlotter(
+    lmap = llplot.LeafletPlotter(
         "https://{s}.tiles.mapbox.com/v4/mapbox.{mapid}/{z}/{x}/{y}@2x.png?"
         "access_token=" + mapbox_token,
         37.766956, -122.438481, 13
@@ -32,14 +32,14 @@ make creating exploratory map views effortless. Here's a crash course:
         (37.764028, -122.510347),
         (37.771269, -122.511015)
         ])
-    gmap.plot(golden_gate_park_lats, golden_gate_park_lons, 'cornflowerblue', edge_width=10)
+    lmap.plot(golden_gate_park_lats, golden_gate_park_lons, 'cornflowerblue', edge_width=10)
 
     # Marker
     hidden_gem_lat, hidden_gem_lon = 37.770776, -122.461689
-    gmap.marker(hidden_gem_lat, hidden_gem_lon, 'cornflowerblue')
+    lmap.marker(hidden_gem_lat, hidden_gem_lon, 'cornflowerblue')
 
     # Draw
-    gmap.draw("my_map.html")
+    lmap.draw("my_map.html")
 
 .. image:: https://i.imgur.com/12KXJS3.png
 
