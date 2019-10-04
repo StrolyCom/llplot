@@ -20,6 +20,13 @@ var circle = L.circle({latlng}, {radius}, {{
 	}}).addTo(llMap);
 """
 
+HEATMAP = """
+var heat = L.heatmap({latlng}, {{
+     radius: {radius},
+
+	}}).addTo(llMap);
+"""
+
 # FIXME: This generate a Xmark in cartesian frame rather than in lat/long.
 XMARK = """
 
