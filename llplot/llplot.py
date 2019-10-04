@@ -35,7 +35,7 @@ class LeafletPlotter(object):
                  attribution=DEFAULT_ATTRIBUTION):
         self.tile_url = tile_url
         self.center = (float(center_lat), float(center_lng))
-        self.zoom = int(zoom)
+        self.zoom = int(zoom) or 13
         self.apikey = str(apikey)
         self.attribution = attribution
         self.grids = None
