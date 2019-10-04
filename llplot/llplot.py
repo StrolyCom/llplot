@@ -54,9 +54,8 @@ class LeafletPlotter(object):
         self.html_color_codes = html_color_codes
 
     @classmethod
-    def from_geocode(cls, location_string):
+    def from_geocode(cls, location_string, zoom=13):
         lat, lng = cls.geocode(location_string)
-        zoom = 13
         return cls(lat, lng, zoom)
 
     @classmethod
