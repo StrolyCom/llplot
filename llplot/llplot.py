@@ -280,7 +280,7 @@ class LeafletPlotter(object):
         self.write_circles(f)
         # self.write_symbols(f)
         # self.write_shapes(f)
-        # self.write_heatmap(f)
+        self.write_heatmap(f)
         # self.write_ground_overlay(f)
         self.write_fitbounds(f)
         f.write('\t}\n')
