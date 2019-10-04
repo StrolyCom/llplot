@@ -264,6 +264,11 @@ class LeafletPlotter(object):
             'crossorigin=""></script>'
         )
         f.write(
+            '<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.heat/0.2.0/leaflet-heat.js" '
+            'integrity="sha256-65UqrlgGoRAnKfKRuriH3eeDrOhZgZo1SCenduc+SGo=" '
+            'crossorigin="anonymous"></script>'
+        )
+        f.write(
             '<meta http-equiv="content-type" content="text/html; charset=UTF-8"/>\n')
         f.write('<title>Leaflet - llplot </title>\n')
         # if self.apikey:
@@ -491,13 +496,6 @@ class LeafletPlotter(object):
 
     def write_heatmap(self, f):
         # for heatmap_points, settings_string in self.heatmap_points:
-
-        f.write(
-            '<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.heat/0.2.0/leaflet-heat.js" '
-            'integrity="sha256-65UqrlgGoRAnKfKRuriH3eeDrOhZgZo1SCenduc+SGo=" '
-            'crossorigin="anonymous"></script>'
-        )
-        print(self.heatmap_points)
 
         f.write(HEATMAP.format(latlng=self.heatmap_points[0][0],radius=25))
         f.write(self.heatmap_points[0][1])
