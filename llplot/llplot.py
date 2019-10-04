@@ -9,7 +9,7 @@ import warnings
 from collections import namedtuple
 
 from llplot.color_dicts import mpl_color_map, html_color_codes
-from llplot.google_maps_templates import SYMBOLS, CIRCLE
+from llplot.google_maps_templates import SYMBOLS, CIRCLE, HEATMAP
 
 
 Symbol = namedtuple('Symbol', ['symbol', 'lat', 'long', 'size'])
@@ -161,10 +161,9 @@ class LeafletPlotter(object):
         path = zip(lats, lngs)
         self.paths.append((path, settings))
 
-    def heatmap(self, lats, lngs, threshold=10, radius=10, gradient=None, opacity=0.6, maxIntensity=1, dissipating=True):
+    def heatmap(self, coordinates_intensity, threshold=10, radius=10, gradient=None, opacity=0.6, maxIntensity=1, dissipating=True):
         """
-        :param lats: list of latitudes
-        :param lngs: list of longitudes
+        :param coordinates_intensity: (list of lists) the inner list contains [lat, long, intensity]
         :param maxIntensity:(int) max frequency to use when plotting. Default (None) uses max value on map domain.
         :param threshold:
         :param radius: The hardest param. Example (string):
@@ -182,10 +181,10 @@ class LeafletPlotter(object):
         settings['dissipating'] = dissipating
         settings = self._process_heatmap_kwargs(settings)
 
-        heatmap_points = []
-        for lat, lng in zip(lats, lngs):
-            heatmap_points.append((lat, lng))
-        self.heatmap_points.append((heatmap_points, settings))
+        # heatmap_points = []
+        # for lat, lng in zip(lats, lngs):
+        #     heatmap_points.append((lat, lng))
+        self.heatmap_points.append((coordinates_intensity, settings))
 
 
     def fit_bounds(self, nelat, nelng, swlat, swlng):
@@ -491,21 +490,29 @@ class LeafletPlotter(object):
         f.write('\n\n')
 
     def write_heatmap(self, f):
-        for heatmap_points, settings_string in self.heatmap_points:
-            f.write('var heatmap_points = [\n')
-            for heatmap_lat, heatmap_lng in heatmap_points:
-                f.write('new google.maps.LatLng(%f, %f),\n' %
-                        (heatmap_lat, heatmap_lng))
-            f.write('];\n')
-            f.write('\n')
-            f.write('var pointArray = new google.maps.MVCArray(heatmap_points);' + '\n')
-            f.write('var heatmap;' + '\n')
-            f.write('heatmap = new google.maps.visualization.HeatmapLayer({' + '\n')
-            f.write('\n')
-            f.write('data: pointArray' + '\n')
-            f.write('});' + '\n')
-            f.write('heatmap.setMap(map);' + '\n')
-            f.write(settings_string)
+        # for heatmap_points, settings_string in self.heatmap_points:
+
+        f.write(
+            '<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.heat/0.2.0/leaflet-heat.js" '
+            'integrity="sha256-65UqrlgGoRAnKfKRuriH3eeDrOhZgZo1SCenduc+SGo=" '
+            'crossorigin="anonymous"></script>'
+        )
+
+        f.write(HEATMAP.format(latlng=self.heatmap_points[0][0], radius=self.heatmap_points[0][1]["radius"]))
+            # f.write('var heatmap_points = [\n')
+            # for heatmap_lat, heatmap_lng in heatmap_points:
+            #     f.write('new google.maps.LatLng(%f, %f),\n' %
+            #             (heatmap_lat, heatmap_lng))
+            # f.write('];\n')
+            # f.write('\n')
+            # f.write('var pointArray = new google.maps.MVCArray(heatmap_points);' + '\n')
+            # f.write('var heatmap;' + '\n')
+            # f.write('heatmap = new google.maps.visualization.HeatmapLayer({' + '\n')
+            # f.write('\n')
+            # f.write('data: pointArray' + '\n')
+            # f.write('});' + '\n')
+            # f.write('heatmap.setMap(map);' + '\n')
+            # f.write(settings_string)
 
     def write_ground_overlay(self, f):
 
@@ -531,34 +538,3 @@ class LeafletPlotter(object):
                  self.bounding_box[2], self.bounding_box[3]))
         f.write('llMap.fitBounds(bounds);\n')
 
-if __name__ == "__main__":
-
-    mymap = LeafletPlotter(37.428, -122.145, 16)
-    # mymap = GoogleMapPlotter.from_geocode("Stanford University")
-
-    mymap.grid(37.42, 37.43, 0.001, -122.15, -122.14, 0.001)
-    mymap.marker(37.427, -122.145, "yellow")
-    mymap.marker(37.428, -122.146, "cornflowerblue")
-    mymap.marker(37.429, -122.144, "k")
-    lat, lng = mymap.geocode("Stanford University")
-    mymap.marker(lat, lng, "red")
-    mymap.circle(37.429, -122.145, 100, "#FF0000", ew=2)
-    path = [(37.429, 37.428, 37.427, 37.427, 37.427),
-             (-122.145, -122.145, -122.145, -122.146, -122.146)]
-    path2 = [[i+.01 for i in path[0]], [i+.02 for i in path[1]]]
-    path3 = [(37.433302 , 37.431257 , 37.427644 , 37.430303), (-122.14488, -122.133121, -122.137799, -122.148743)]
-    path4 = [(37.423074, 37.422700, 37.422410, 37.422188, 37.422274, 37.422495, 37.422962, 37.423552, 37.424387, 37.425920, 37.425937),
-         (-122.150288, -122.149794, -122.148936, -122.148142, -122.146747, -122.14561, -122.144773, -122.143936, -122.142992, -122.147863, -122.145953)]
-    mymap.plot(path[0], path[1], "plum", edge_width=10)
-    mymap.plot(path2[0], path2[1], "red")
-    mymap.polygon(path3[0], path3[1], edge_color="cyan", edge_width=5, face_color="blue", face_alpha=0.1)
-    mymap.heatmap(path4[0], path4[1], threshold=10, radius=40)
-    mymap.heatmap(path3[0], path3[1], threshold=10, radius=40, dissipating=False, gradient=[(30,30,30,0), (30,30,30,1), (50, 50, 50, 1)])
-    mymap.scatter(path4[0], path4[1], c='r', marker=True)
-    mymap.scatter(path4[0], path4[1], s=90, marker=False, alpha=0.9, symbol='x', c='red', edge_width=4)
-    # Get more points with:
-    # http://www.findlatitudeandlongitude.com/click-lat-lng-list/
-    scatter_path = ([37.424435, 37.424417, 37.424417, 37.424554, 37.424775, 37.425099, 37.425235, 37.425082, 37.424656, 37.423957, 37.422952, 37.421759, 37.420447, 37.419135, 37.417822, 37.417209],
-                    [-122.142048, -122.141275, -122.140503, -122.139688, -122.138872, -122.138078, -122.137241, -122.136405, -122.135568, -122.134731, -122.133894, -122.133057, -122.13222, -122.131383, -122.130557, -122.129999])
-    mymap.scatter(scatter_path[0], scatter_path[1], c='r', marker=True)
-    mymap.draw('./mymap.html')
