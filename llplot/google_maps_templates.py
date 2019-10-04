@@ -21,7 +21,7 @@ var circle = L.circle({latlng}, {radius}, {{
 """
 
 HEATMAP = """
-var heat = L.heatmap({latlng}, {{
+var heat = L.heatLayer({latlng}, {{
      radius: {radius},
 
 	}}).addTo(llMap);
