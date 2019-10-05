@@ -196,15 +196,15 @@ class LeafletPlotter(object):
         # settings_string += "heatmap.set('maxZoom', %d);\n" % settings_dict['maxZoom']
         settings_string += "heatmap.setOptions(%s);\n" % settings_dict
 
-        gradient = settings_dict['gradient']
-        if gradient:
-            gradient_string = "var gradient = [\n"
-            for r, g, b, a in gradient:
-                gradient_string += "\t" + "'rgba(%d, %d, %d, %d)',\n" % (r, g, b, a)
-            gradient_string += '];' + '\n'
-            gradient_string += "heatmap.set('gradient', gradient);\n"
-
-            settings_string += gradient_string
+        # gradient = settings_dict['gradient']
+        # # if gradient:
+        # #     gradient_string = "var gradient = [\n"
+        # #     for r, g, b, a in gradient:
+        # #         gradient_string += "\t" + "'rgba(%d, %d, %d, %d)',\n" % (r, g, b, a)
+        # #     gradient_string += '];' + '\n'
+        # #     gradient_string += "heatmap.set('gradient', gradient);\n"
+        # #
+        # #     settings_string += gradient_string
 
         return settings_string
 
