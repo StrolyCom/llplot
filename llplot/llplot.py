@@ -189,11 +189,12 @@ class LeafletPlotter(object):
 
     def _process_heatmap_kwargs(self, settings_dict):
         settings_string = ''
-        settings_string += "heatmap.set('blur', %d);\n" % settings_dict['blur']
-        settings_string += "heatmap.set('radius', %d);\n" % settings_dict['radius']
-        settings_string += "heatmap.set('max', %f);\n" % settings_dict['max']
-        settings_string += "heatmap.set('minOpacity', %f);\n" % settings_dict['minOpacity']
-        settings_string += "heatmap.set('maxZoom', %d);\n" % settings_dict['maxZoom']
+        # settings_string += "heatmap.set('blur', %d);\n" % settings_dict['blur']
+        # settings_string += "heatmap.set('radius', %d);\n" % settings_dict['radius']
+        # settings_string += "heatmap.set('max', %f);\n" % settings_dict['max']
+        # settings_string += "heatmap.set('minOpacity', %f);\n" % settings_dict['minOpacity']
+        # settings_string += "heatmap.set('maxZoom', %d);\n" % settings_dict['maxZoom']
+        settings_string += "heatmap.setOptions(%s);\n" % settings_dict
 
         gradient = settings_dict['gradient']
         if gradient:
