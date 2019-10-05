@@ -178,9 +178,7 @@ class LeafletPlotter(object):
         settings['maxZoom'] = maxZoom
         settings = self._process_heatmap_kwargs(settings)
 
-        # heatmap_points = []
-        # for lat, lng in zip(lats, lngs):
-        #     heatmap_points.append((lat, lng))
+
         self.heatmap_points.append((coordinates_intensity, settings))
 
 
@@ -189,22 +187,9 @@ class LeafletPlotter(object):
 
     def _process_heatmap_kwargs(self, settings_dict):
         settings_string = ''
-        # settings_string += "heatmap.set('blur', %d);\n" % settings_dict['blur']
-        # settings_string += "heatmap.set('radius', %d);\n" % settings_dict['radius']
-        # settings_string += "heatmap.set('max', %f);\n" % settings_dict['max']
-        # settings_string += "heatmap.set('minOpacity', %f);\n" % settings_dict['minOpacity']
-        # settings_string += "heatmap.set('maxZoom', %d);\n" % settings_dict['maxZoom']
+
         settings_string += "heatmap.setOptions(%s);\n" % settings_dict
 
-        # gradient = settings_dict['gradient']
-        # # if gradient:
-        # #     gradient_string = "var gradient = [\n"
-        # #     for r, g, b, a in gradient:
-        # #         gradient_string += "\t" + "'rgba(%d, %d, %d, %d)',\n" % (r, g, b, a)
-        # #     gradient_string += '];' + '\n'
-        # #     gradient_string += "heatmap.set('gradient', gradient);\n"
-        # #
-        # #     settings_string += gradient_string
 
         return settings_string
 
