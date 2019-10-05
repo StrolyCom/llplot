@@ -161,7 +161,7 @@ class LeafletPlotter(object):
         path = zip(lats, lngs)
         self.paths.append((path, settings))
 
-    def heatmap(self, coordinates_intensity, blur=15, radius=10, gradient=None, minOpacity=0.6, max=1.0, maxZoom=10):
+    def heatmap(self, coordinates_intensity, blur=15, radius=10, gradient={0.4: 'blue', 0.65: 'lime', 1: 'red'}, minOpacity=0.6, max=1.0, maxZoom=10):
         """
         :param coordinates_intensity: (list of lists) the inner list contains [lat, long, intensity]
         :param maxIntensity:(int) max frequency to use when plotting. Default (None) uses max value on map domain.
