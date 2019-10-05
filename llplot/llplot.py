@@ -161,7 +161,7 @@ class LeafletPlotter(object):
         path = zip(lats, lngs)
         self.paths.append((path, settings))
 
-    def heatmap(self, coordinates_intensity, threshold=10, radius=10, gradient=None, opacity=0.6, maxIntensity=1, dissipating=True):
+    def heatmap(self, coordinates_intensity, blur=15, radius=10, gradient=None, minOpacity=0.6, max=1.0, maxZoom=10):
         """
         :param coordinates_intensity: (list of lists) the inner list contains [lat, long, intensity]
         :param maxIntensity:(int) max frequency to use when plotting. Default (None) uses max value on map domain.
@@ -170,15 +170,12 @@ class LeafletPlotter(object):
         :return:
         """
         settings = {}
-        # Try to give anyone using threshold a heads up.
-        if threshold != 10:
-            warnings.warn("The 'threshold' kwarg is deprecated, replaced in favor of maxIntensity.")
-        settings['threshold'] = threshold
-        settings['radius'] = radius
+        settings['blur'] = blur
+        settings['radius'] = radius or 25
         settings['gradient'] = gradient
-        settings['opacity'] = opacity
-        settings['maxIntensity'] = maxIntensity
-        settings['dissipating'] = dissipating
+        settings['minOpacity'] = minOpacity
+        settings['max'] = max
+        settings['maxZoom'] = maxZoom
         settings = self._process_heatmap_kwargs(settings)
 
         # heatmap_points = []
@@ -192,13 +189,11 @@ class LeafletPlotter(object):
 
     def _process_heatmap_kwargs(self, settings_dict):
         settings_string = ''
-        settings_string += "heatmap.set('threshold', %d);\n" % settings_dict['threshold']
+        settings_string += "heatmap.set('blur', %d);\n" % settings_dict['blur']
         settings_string += "heatmap.set('radius', %d);\n" % settings_dict['radius']
-        settings_string += "heatmap.set('maxIntensity', %d);\n" % settings_dict['maxIntensity']
-        settings_string += "heatmap.set('opacity', %f);\n" % settings_dict['opacity']
-
-        dissipation_string = 'true' if settings_dict['dissipating'] else 'false'
-        settings_string += "heatmap.set('dissipating', %s);\n" % (dissipation_string)
+        settings_string += "heatmap.set('max', %f);\n" % settings_dict['max']
+        settings_string += "heatmap.set('minOpacity', %f);\n" % settings_dict['minOpacity']
+        settings_string += "heatmap.set('maxZoom', %d);\n" % settings_dict['maxZoom']
 
         gradient = settings_dict['gradient']
         if gradient:
