@@ -239,8 +239,9 @@ class LeafletPlotter(object):
         settings['zIndex'] = zIndex
         settings['className'] = className
         # bounds_string = self._process_ground_overlay_image_bounds(imageBounds)
-        self.ground_overlays.append((imageUrl, imageBounds))
-        self._process_ground_overlay_settings(settings)
+
+        settings = self._process_ground_overlay_settings(settings)
+        self.ground_overlays.append((imageUrl, imageBounds, settings))
 
     def _process_ground_overlay_settings(self, settings):
         settings_string = ''
@@ -516,7 +517,7 @@ class LeafletPlotter(object):
 
     def write_ground_overlay(self, f):
 
-        for url, bounds_string in self.ground_overlays:
+        for url, bounds_string, settings in self.ground_overlays:
         #     f.write(bounds_string)
         #     f.write('var groundOverlay;' + '\n')
         #     f.write('groundOverlay = new google.maps.GroundOverlay(' + '\n')
@@ -525,6 +526,8 @@ class LeafletPlotter(object):
         #     f.write('imageBounds);' + '\n')
         #     f.write('groundOverlay.setMap(map);' + '\n')
             f.write(OVERLAY.format(imageUrl=url, imageBounds=bounds_string))
+            f.write(settings)
+
 
     def write_fitbounds(self, f):
         if self.bounding_box is None:
