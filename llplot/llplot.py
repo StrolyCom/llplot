@@ -525,8 +525,7 @@ class LeafletPlotter(object):
         #     f.write("'" + url + "'," + '\n')
         #     f.write('imageBounds);' + '\n')
         #     f.write('groundOverlay.setMap(map);' + '\n')
-            f.write(OVERLAY.format(imageUrl=url, imageBounds=bounds_string))
-            f.write(settings)
+            f.write(OVERLAY.format(imageUrl=url, imageBounds=bounds_string, settings=settings))
 
 
     def write_fitbounds(self, f):
