@@ -240,14 +240,7 @@ class LeafletPlotter(object):
         settings['className'] = className
         # bounds_string = self._process_ground_overlay_image_bounds(imageBounds)
 
-        settings = self._process_ground_overlay_settings(settings)
         self.ground_overlays.append((imageUrl, imageBounds, settings))
-
-    def _process_ground_overlay_settings(self, settings):
-        settings_string = ''
-        settings_string += "overlay.setOptions(%s);\n" % settings
-
-        return settings_string
 
     def polygon(self, lats, lngs, color=None, c=None, **kwargs):
         color = color or c
