@@ -213,7 +213,9 @@ class LeafletPlotter(object):
 
         return settings_string
 
-    def ground_overlay(self, imageUrl, imageBounds):
+    def ground_overlay(self, imageUrl, imageBounds, opacity=1.0, alt='',
+                       interactive=0, crossOrigin=0, errorOverlayUrl='',
+                       zIndex=1, className=''):
         '''
         :param imageUrl: Url of image to overlay
         :param imageBounds: dict of the form  [[40.712216, -74.22655], [40.773941, -74.12544]]
@@ -228,18 +230,23 @@ class LeafletPlotter(object):
         Leaflet API documentation
         https://leafletjs.com/reference-1.5.0.html#imageoverlay
         '''
-
+        settings = {}
+        settings['opacity'] = opacity
+        settings['alt'] = alt
+        settings['interactive'] = interactive
+        settings['crossOrigin'] = crossOrigin
+        settings['errorOverlayUrl'] = errorOverlayUrl
+        settings['zIndex'] = zIndex
+        settings['className'] = className
         # bounds_string = self._process_ground_overlay_image_bounds(imageBounds)
         self.ground_overlays.append((imageUrl, imageBounds))
+        self._process_ground_overlay_settings(settings)
 
-    def _process_ground_overlay_image_bounds(self, bounds_dict):
-        bounds_string = 'var imageBounds = {'
-        bounds_string += "north:  %.4f,\n" % bounds_dict['north']
-        bounds_string += "south:  %.4f,\n" % bounds_dict['south']
-        bounds_string += "east:  %.4f,\n" % bounds_dict['east']
-        bounds_string += "west:  %.4f};\n" % bounds_dict['west']
+    def _process_ground_overlay_settings(self, settings):
+        settings_string = ''
+        settings_string += "overlay.setOptions(%s);\n" % settings
 
-        return bounds_string
+        return settings_string
 
     def polygon(self, lats, lngs, color=None, c=None, **kwargs):
         color = color or c
