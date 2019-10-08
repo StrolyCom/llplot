@@ -57,6 +57,11 @@ linePath.setMap(map);
 
 """ % EARTH_RADIUS
 
+OVERLAY = """
+var imageUrl = "{imageUrl}",
+imageBounds = {imageBounds};
+var overlay = L.imageOverlay(imageUrl, imageBounds, {settings}).addTo(llMap);
+"""
 
 # FIXME: This generate a Xmark in cartesian frame rather than in lat/long.
 CROSS = """
