@@ -238,8 +238,6 @@ class LeafletPlotter(object):
         settings['errorOverlayUrl'] = errorOverlayUrl
         settings['zIndex'] = zIndex
         settings['className'] = className
-        # bounds_string = self._process_ground_overlay_image_bounds(imageBounds)
-
         self.ground_overlays.append((imageUrl, imageBounds, settings))
 
     def polygon(self, lats, lngs, color=None, c=None, **kwargs):
@@ -511,13 +509,6 @@ class LeafletPlotter(object):
     def write_ground_overlay(self, f):
 
         for url, bounds_string, settings in self.ground_overlays:
-        #     f.write(bounds_string)
-        #     f.write('var groundOverlay;' + '\n')
-        #     f.write('groundOverlay = new google.maps.GroundOverlay(' + '\n')
-        #     f.write('\n')
-        #     f.write("'" + url + "'," + '\n')
-        #     f.write('imageBounds);' + '\n')
-        #     f.write('groundOverlay.setMap(map);' + '\n')
             f.write(OVERLAY.format(imageUrl=url, imageBounds=bounds_string, settings=settings))
 
 
