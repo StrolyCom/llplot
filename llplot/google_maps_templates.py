@@ -60,7 +60,7 @@ linePath.setMap(map);
 OVERLAY = """
 var imageUrl = "{imageUrl}",
 imageBounds = {imageBounds};
-L.imageOverlay(imageUrl, imageBounds).addTo(llMap);
+var overlay = L.imageOverlay(imageUrl, imageBounds).addTo(llMap);
 """
 
 # FIXME: This generate a Xmark in cartesian frame rather than in lat/long.
